@@ -9,12 +9,12 @@ public interface Scene {
     default void showNextScreen(TrailRenderer renderer) {
         // -1 represents a Scene that has just been made
         if (getScreenIndex() == -1) {
-            getScreens().getFirst().renderUIComponents(renderer);
+            updateUI(0, renderer);
             setScreenIndex(0);
         } else {
             int index = getScreenIndex() + 1;
             if (index < getScreens().size()) {
-                getScreens().get(index).renderUIComponents(renderer);
+                updateUI(index, renderer);
                 setScreenIndex(index);
             } else {
                 setFinished();
@@ -22,7 +22,16 @@ public interface Scene {
         }
     }
     int getScreenIndex();
-    void setScreenIndex(int i);
+
+    /**
+     * Sets the screen index to the specified index.
+     * It also automatically redraws the UI
+     * @param i Screen index
+     */
+    void setScreenIndex(int i); // TODO Ensure updateUI() is called
+    default void updateUI(int index, TrailRenderer renderer) {
+        getScreens().get(index).renderUIComponents(renderer);
+    }
     boolean finished();
     void setFinished();
 }

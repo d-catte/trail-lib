@@ -1,6 +1,8 @@
 package io.github.d_catte;
 
 import com.google.gson.Gson;
+import io.github.d_catte.data.DataPaths;
+import io.github.d_catte.data.Serializer;
 import io.github.d_catte.game.Game;
 import io.github.d_catte.scene.Scene;
 import io.github.d_catte.scene.default_scenes.MainMenu;
@@ -23,6 +25,7 @@ public class TrailApplication {
     public static Game gameInstance;
     public static final String VERSION = "v1.0.0-dev.1";
     public static final String[] SAVES;
+    public static final Serializer SERIALIZER;
 
     public static void main(String[] args) {
     }
@@ -30,10 +33,20 @@ public class TrailApplication {
     public TrailApplication() {
         LOGGER.info("Initializing Trail Lib");
         Gson gson = new Gson();
-        LOGGER.info("Loading Saves");
-        SAVES = this.loadSaves();
+        LOGGER.info("Gathering Data");
+        DataPaths dataPaths = new DataPaths(
+                sceneData(),
+                statusData(),
+                gameData(),
+                itemData(),
+                shopItemData(),
+                townData(),
+                eventData(),
+                professionData(),
+                config()
+        );
         LOGGER.info("Loading Config");
-        Config config = Config.getConfig(gson, config());
+        Config config = Config.getConfig(gson, dataPaths);
         LOGGER.info("Creating Rendering Context");
         TrailRenderer renderer;
         if (config.renderingBackend == Config.RenderingBackend.Swing) {
@@ -41,6 +54,10 @@ public class TrailApplication {
         } else {
             renderer = new ImGUIRenderer();
         }
+        LOGGER.info("Serializing Data");
+        SERIALIZER = new Serializer(dataPaths, gson, renderer);
+        LOGGER.info("Reading Saves");
+        SAVES = this.loadSaves();
         LOGGER.info("Forming Main GUI");
         Scene mainMenu = new MainMenu();
 
@@ -54,11 +71,20 @@ public class TrailApplication {
         return null;
     }
 
+    /**
+     * This is the path to the saves directory.
+     * Inside of this directory will be all folders labelled with the name of the game save.
+     * The directory hierarchy looks like this:
+     * saves
+     * - "save1"
+     *      - game.json
+     *      - members.json
+     * - "save2"
+     *      - game.json
+     *      - members.json
+     * @return Path to the saves directory
+     */
     public Path gameData() {
-        return null;
-    }
-
-    public Path memberData() {
         return null;
     }
 
@@ -67,6 +93,18 @@ public class TrailApplication {
     }
 
     public Path shopItemData() {
+        return null;
+    }
+
+    public Path townData() {
+        return null;
+    }
+
+    public Path eventData() {
+        return null;
+    }
+
+    public Path professionData() {
         return null;
     }
 

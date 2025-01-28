@@ -13,13 +13,14 @@ import java.util.concurrent.ThreadLocalRandom;
  * They can represent a member dying, a status being applied, a town being visiting, or another random trail event
  * @param type The type of Event
  * @param translationKey The translation for the subtitle that appears on the screen
+ * @param pathToScreen The path to the screen json
  * @param additionalData Any additional data from the EventType
  * @param chance The chance that the event is selected randomly
  * @param statusToApply If a status is applied (This will automatically add the status to a random player and create
  *                      a new status inflicted event)
  */
-public record Event(EventType type, String translationKey, float chance, @Nullable
-                    StatusContainer statusToApply, String... additionalData) {
+public record Event(EventType type, String translationKey, String pathToScreen, float chance,
+                    @Nullable StatusContainer statusToApply, String... additionalData) {
 
     public String getSubtitle() {
         switch (type) {
@@ -37,7 +38,7 @@ public record Event(EventType type, String translationKey, float chance, @Nullab
     }
 
     public Event copyInstance() {
-        return new Event(this.type, this.translationKey, this.chance, this.statusToApply, this.additionalData);
+        return new Event(this.type, this.translationKey, this.pathToScreen, this.chance, this.statusToApply, this.additionalData);
     }
 
     /**

@@ -2,29 +2,43 @@ package io.github.d_catte.data;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.github.d_catte.TrailApplication;
 import io.github.d_catte.game.Game;
 import io.github.d_catte.game.PurchasableItem;
 import io.github.d_catte.game.event.Event;
+import io.github.d_catte.scene.Screen;
 import io.github.d_catte.utils.Config;
+import io.github.d_catte.utils.rendering.TrailRenderer;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public final class Serializer {
+public class Serializer {
+    private final DataPaths paths;
+    private final Gson gson;
+    private final TrailRenderer renderer;
+
+    public Serializer(DataPaths paths, Gson gson, TrailRenderer renderer) {
+        this.paths = paths;
+        this.gson = gson;
+        this.renderer = renderer;
+    }
+
     /**
      * Gets the statuses for the game with their base probability
-     * @param path Path containing the statuses json
-     * @param gson Gson instance
      * @return All available statuses for the game with their base probabilities
      */
-    public static List<StatusContainer> getStatuses(Path path, Gson gson) {
-        try (FileReader reader = new FileReader(path.toFile())) {
-            return gson.fromJson(reader, new TypeToken<List<StatusContainer>>(){}.getType());
+    public List<StatusContainer> getStatuses() {
+        try (FileReader reader = new FileReader(this.paths.statusPath().toFile())) {
+            return this.gson.fromJson(reader, new TypeToken<List<StatusContainer>>(){}.getType());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -32,13 +46,12 @@ public final class Serializer {
 
     /**
      * Gets data about the previous Game session
-     * @param path Path containing the game json
-     * @param gson Gson instance
+     * @param path Path to the game directory
      * @return Game with minimal data
      */
-    public static Game getGameData(Path path, Gson gson) {
-        try (FileReader reader = new FileReader(path.toFile())) {
-            return gson.fromJson(reader, Game.class);
+    public Game getGameData(Path path) {
+        try (FileReader reader = new FileReader(path.resolve("game.json").toFile())) {
+            return this.gson.fromJson(reader, Game.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -46,13 +59,24 @@ public final class Serializer {
 
     /**
      * Gets the members' data from the previous Game session
-     * @param path Path containing the member json
-     * @param gson Gson instance
+     * @param path Path to the game directory
      * @return Members' data
      */
-    public static List<Member> getMemberData(Path path, Gson gson) {
-        try (FileReader reader = new FileReader(path.toFile())) {
-            return gson.fromJson(reader, new TypeToken<List<Member>>(){}.getType());
+    public List<Member> getMemberData(Path path) {
+        try (FileReader reader = new FileReader(path.resolve("members.json").toFile())) {
+            return this.gson.fromJson(reader, new TypeToken<List<Member>>(){}.getType());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Gets all professions that can be used
+     * @return Array of all professions
+     */
+    public String[] getProfessions() {
+        try (FileReader reader = new FileReader(this.paths.professionPath().toFile())) {
+            return this.gson.fromJson(reader, String[].class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -60,13 +84,27 @@ public final class Serializer {
 
     /**
      * Gets the Events that can occur on the journey
-     * @param path Path containing the Events json
-     * @param gson Gson instance
      * @return Events
      */
-    public static List<Event> getEventData(Path path, Gson gson) {
-        try (FileReader reader = new FileReader(path.toFile())) {
-            return gson.fromJson(reader, new TypeToken<List<Event>>(){}.getType());
+    public List<Event> getEventData() {
+        try (FileReader reader = new FileReader(this.paths.eventsPath().toFile())) {
+            return this.gson.fromJson(reader, new TypeToken<List<Event>>(){}.getType());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Gets all the Screens for the Event
+     * @param event Event to get Screens for
+     * @return All Screens for the Event
+     */
+    public List<Screen> getScreens(Event event) {
+        try (FileReader reader = new FileReader(Paths.get(event.pathToScreen()).toFile())) {
+            List<ScreenData> screenData = this.gson.fromJson(reader, new TypeToken<List<ScreenData>>(){}.getType());
+            return screenData.stream()
+                    .map(ScreenData::toInfoScreen)
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -74,13 +112,11 @@ public final class Serializer {
 
     /**
      * Gets the ItemStacks being sold in the shop with their prices
-     * @param path Path containing the purchasable items json
-     * @param gson Gson instance
      * @return All PurchasableItems
      */
-    public static List<PurchasableItem> getShopItemsData(Path path, Gson gson) {
-        try (FileReader reader = new FileReader(path.toFile())) {
-            return gson.fromJson(reader, new TypeToken<List<PurchasableItem>>(){}.getType());
+    public List<PurchasableItem> getShopItemsData() {
+        try (FileReader reader = new FileReader(this.paths.shopItemsPath().toFile())) {
+            return this.gson.fromJson(reader, new TypeToken<List<PurchasableItem>>(){}.getType());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,13 +124,11 @@ public final class Serializer {
 
     /**
      * Gets the towns and at what mile marker they are at
-     * @param path Path containing the towns json
-     * @param gson Gson instance
      * @return All towns
      */
-    public static HashMap<Integer, String> getTownData(Path path, Gson gson) {
-        try (FileReader reader = new FileReader(path.toFile())) {
-            return gson.fromJson(reader, new TypeToken<HashMap<Integer, String>>(){}.getType());
+    public HashMap<Integer, String> getTownData() {
+        try (FileReader reader = new FileReader(this.paths.townsPath().toFile())) {
+            return this.gson.fromJson(reader, new TypeToken<HashMap<Integer, String>>(){}.getType());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -102,29 +136,23 @@ public final class Serializer {
 
     /**
      * Gets the game data for the game instance
-     * @param gamePath Path to the game data json file
-     * @param memberPath Path to the member data json file
-     * @param statusPath Path to the statuses json file
-     * @param eventsPath Path to the events json file
-     * @param townsPath Path to the towns json file
-     * @param configPath Path to the config json file
-     * @param gson Gson instance
+     * @param saveName The name of the save to load
      * @return game data as a Game instance
      */
-    public static Game loadGame(Path gamePath, Path memberPath, Path statusPath, Path eventsPath, Path townsPath, Path configPath, Gson gson) {
-        Game priorGame = getGameData(gamePath, gson);
-        List<Member> members = getMemberData(memberPath, gson);
-        return new Game(priorGame, getStatuses(statusPath, gson), getEventData(eventsPath, gson), getTownData(townsPath, gson), members, Config.getConfig(gson, configPath));
+    public Game loadGame(String saveName) {
+        Path savePath = this.paths.savesDirectoryPath().resolve(saveName);
+        Game priorGame = getGameData(savePath);
+        List<Member> members = getMemberData(savePath);
+        return new Game(renderer, paths, priorGame, getStatuses(), getEventData(), getTownData(), members, Config.getConfig(this.gson, this.paths));
     }
 
     /**
      * Saves new or existing game data
-     * @param data Existing SaveData instance if present
-     * @param gson Gson instance
-     * @param gamePath The path where the game data is saved
-     * @param memberPath The path where the member data is saved
      */
-    public static void saveGame(Game data, Gson gson, Path gamePath, Path memberPath) {
+    public void saveGame() {
+        Path saveDir = this.paths.savesDirectoryPath().resolve(TrailApplication.gameInstance.saveName);
+        Path gamePath = saveDir.resolve("game.json");
+        Path memberPath = saveDir.resolve("member.json");
         if (Files.notExists(gamePath)) {
             try {
                 Files.createFile(gamePath);
@@ -133,7 +161,7 @@ public final class Serializer {
             }
         }
         try (FileWriter writer = new FileWriter(gamePath.toFile())) {
-            writer.write(gson.toJson(data));
+            writer.write(this.gson.toJson(TrailApplication.gameInstance));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -146,7 +174,7 @@ public final class Serializer {
             }
         }
         try (FileWriter writer = new FileWriter(memberPath.toFile())) {
-            writer.write(gson.toJson(data.members));
+            writer.write(this.gson.toJson(TrailApplication.gameInstance.members));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

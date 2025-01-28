@@ -1,6 +1,7 @@
 package io.github.d_catte.utils;
 
 import com.google.gson.Gson;
+import io.github.d_catte.data.DataPaths;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,8 +21,8 @@ public class Config {
 
     public Config() {}
 
-    public static Config getConfig(Gson gson, Path path) {
-        try (FileReader reader = new FileReader(path.toFile())) {
+    public static Config getConfig(Gson gson, DataPaths paths) {
+        try (FileReader reader = new FileReader(paths.config().toFile())) {
             Config instance = gson.fromJson(reader, Config.class);
             if (!instance.configVer.equals(currentConfigVer)) {
                 migrateConfig(instance);
