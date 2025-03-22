@@ -1,23 +1,30 @@
 package io.github.d_catte.utils;
 
-import java.awt.*;
-
+/**
+ * Stores the color and size of a piece of text in the game.
+ */
 public class Text {
     public String textString;
     public int[] textRGB;
     public int fontSize;
 
+    /**
+     * Text constructor
+     * @param textString The string that makes up the Text
+     * @param textRGB Array of RGB values for the text color (e.g. {255, 255, 255} for black)
+     * @param fontSize Size of text in the Cowboy Pixel font
+     */
     public Text(String textString, int[] textRGB, int fontSize) {
         this.textString = textString;
         this.textRGB = textRGB;
         this.fontSize = fontSize;
     }
 
-    public Text(String textString, Color color, int fontSize) {
-        this(textString, new int[] {color.getRed(), color.getGreen(), color.getBlue()}, fontSize);
-    }
-
+    /**
+     * Default Text constructor, assumes black text of size 12
+     * @param textString The string that makes up the Text
+     */
     public Text(String textString) {
-        this(textString, Color.BLACK, 12); //TODO Determine a good default font size
+        this(textString, new int[] {255, 255, 255}, 12);
     }
 }

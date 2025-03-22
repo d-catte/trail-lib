@@ -7,9 +7,6 @@ import io.github.d_catte.game.Game;
 import io.github.d_catte.scene.Scene;
 import io.github.d_catte.scene.default_scenes.MainMenu;
 import io.github.d_catte.utils.Config;
-import io.github.d_catte.utils.rendering.ImGUIRenderer;
-import io.github.d_catte.utils.rendering.SwingRenderer;
-import io.github.d_catte.utils.rendering.TrailRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,12 +45,6 @@ public class TrailApplication {
         LOGGER.info("Loading Config");
         Config config = Config.getConfig(gson, dataPaths);
         LOGGER.info("Creating Rendering Context");
-        TrailRenderer renderer;
-        if (config.renderingBackend == Config.RenderingBackend.Swing) {
-            renderer = new SwingRenderer();
-        } else {
-            renderer = new ImGUIRenderer();
-        }
         LOGGER.info("Serializing Data");
         SERIALIZER = new Serializer(dataPaths, gson, renderer);
         LOGGER.info("Reading Saves");

@@ -22,6 +22,10 @@ import java.util.concurrent.ThreadLocalRandom;
 public record Event(EventType type, String translationKey, String pathToScreen, float chance,
                     @Nullable StatusContainer statusToApply, String... additionalData) {
 
+    /**
+     * Get the text associated with an Event (ex. "You have died of dysentery.")
+     * @return a String containing this text.
+     */
     public String getSubtitle() {
         switch (type) {
             case Death, StatusInflicted -> {
@@ -37,6 +41,10 @@ public record Event(EventType type, String translationKey, String pathToScreen, 
         return RenderUtils.EMPTY_STR;
     }
 
+    /**
+     * Shallow clone an existing Event
+     * @return a new Event containing the same data as the original.
+     */
     public Event copyInstance() {
         return new Event(this.type, this.translationKey, this.pathToScreen, this.chance, this.statusToApply, this.additionalData);
     }

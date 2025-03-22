@@ -1,11 +1,10 @@
 package io.github.d_catte.game;
 
-public class PurchasableItem {
-    public final ItemStack soldItem;
+public class PurchasableItem extends ItemStack {
     public final float price;
 
-    public PurchasableItem(ItemStack itemStack, float price) {
-        this.soldItem = itemStack;
+    public PurchasableItem(String name, float price) {
+        super(name);
         this.price = price;
     }
 

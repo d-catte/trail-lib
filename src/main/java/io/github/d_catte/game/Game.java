@@ -8,12 +8,7 @@ import io.github.d_catte.data.StatusContainer;
 import io.github.d_catte.game.event.Event;
 import io.github.d_catte.game.event.EventManager;
 import io.github.d_catte.scene.Scene;
-import io.github.d_catte.scene.default_scenes.AbstractEventScene;
-import io.github.d_catte.scene.default_scenes.StoreScene;
-import io.github.d_catte.scene.default_scenes.TownScene;
-import io.github.d_catte.scene.default_scenes.VictoryScene;
 import io.github.d_catte.utils.Config;
-import io.github.d_catte.utils.rendering.TrailRenderer;
 
 import javax.annotation.Nullable;
 import java.nio.file.Files;
@@ -28,7 +23,6 @@ public class Game {
     public final List<Member> members;
     public final Queue<Scene> renderQueue = new ArrayDeque<>(); //TODO Create a memory-efficient way of retrieving all Scenes (don't load them all into RAM)
     public Scene currentScene;
-    public final TrailRenderer renderer;
     public final Config config;
     public final DataPaths paths;
     @Expose
@@ -47,13 +41,12 @@ public class Game {
      * This constructor is used when creating a new Game
      * @param saveName The name for the game instance
      * @param paths DataPaths instance
-     * @param renderer TrailRenderer instance
      * @param config Config instance
      * @param memberNames All members' names
      * @param playerProfessions All players' professions
      * @param difficulty The difficulty of the game
      */
-    public Game(String saveName, DataPaths paths, TrailRenderer renderer, Config config, String[] memberNames, String[] playerProfessions, short difficulty) {
+    public Game(String saveName, DataPaths paths, Config config, String[] memberNames, String[] playerProfessions, short difficulty) {
         this.money = config.startingMoney;
         this.members = new ArrayList<>(config.teamMemberCount);
 
@@ -76,7 +69,6 @@ public class Game {
         this.inventory = new Inventory();
         this.difficulty = difficulty;
         this.saveName = saveName;
-        this.renderer = renderer;
         this.config = config;
         this.paths = paths;
     }
@@ -85,7 +77,7 @@ public class Game {
      * This constructor is used when loading an existing Game
      * @param data SaveData instance
      */
-    public Game(TrailRenderer renderer, DataPaths paths, Game data, List<StatusContainer> statusContainers, List<Event> events, Map<Integer, String> towns, List<Member> memberData, Config config) {
+    public Game(DataPaths paths, Game data, List<StatusContainer> statusContainers, List<Event> events, Map<Integer, String> towns, List<Member> memberData, Config config) {
         this.events = events;
         this.statusContainers = statusContainers;
         this.inventory = data.inventory;
@@ -96,7 +88,6 @@ public class Game {
         this.members = memberData;
         this.towns = towns;
         this.config = config;
-        this.renderer = renderer;
         this.paths = paths;
     }
 
@@ -140,7 +131,7 @@ public class Game {
     }
 
     public void nextScreen() {
-        this.currentScene.showNextScreen(this.renderer);
+        this.currentScene.showNextScreen();
         if (this.currentScene.finished()) {
             nextScene();
         }
@@ -153,14 +144,14 @@ public class Game {
         // This is meant to be a recursive function
         this.currentMile++;
         if (this.currentMile >= this.config.miles) {
-            this.renderQueue.add(new VictoryScene());
+//            this.renderQueue.add(new VictoryScene());
             onGameFinished();
             return;
         }
 
         if (this.towns.containsKey(this.currentMile)) {
-            this.renderQueue.add(new TownScene());
-            this.renderQueue.add(new StoreScene());
+//            this.renderQueue.add(new TownScene());
+//            this.renderQueue.add(new StoreScene());
             return;
         }
 
@@ -171,7 +162,7 @@ public class Game {
             // Check twice in case an event adds a second event
             for (int i = 0; i < 2; i++) {
                 for (Event event : EventManager.currentEvents) {
-                    this.renderQueue.add(new AbstractEventScene(event));
+//                    this.renderQueue.add(new AbstractEventScene(event));
                 }
             }
             events.clear();

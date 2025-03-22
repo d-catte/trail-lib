@@ -8,10 +8,10 @@ public class TranslatableText extends Text {
         super(Translations.getTranslatedText(translationKey), textRGB, fontSize);
     }
 
-    public TranslatableText(String translationKey, Color color, int fontSize) {
-        super(Translations.getTranslatedText(translationKey), color, fontSize);
-    }
-
+    /**
+     * Gets the transaltion key for the text
+     * @param translationKey What translation key is being used
+     */
     public TranslatableText(String translationKey) {
         super(Translations.getTranslatedText(translationKey));
     }

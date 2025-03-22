@@ -3,8 +3,6 @@ package io.github.d_catte.utils;
 import io.github.d_catte.TrailApplication;
 import io.github.d_catte.data.DataPaths;
 import io.github.d_catte.game.Game;
-import io.github.d_catte.scene.default_scenes.StoreScene;
-import io.github.d_catte.utils.rendering.TrailRenderer;
 
 import java.util.Arrays;
 
@@ -38,7 +36,7 @@ public class Command {
             case "nextScreen" -> command = this::nextScreen;
             case "nextScene" -> command = this::nextScene;
             case "goTo" -> command = () -> goTo(Integer.parseInt(this.command[1]));
-            case "openStore" -> command =  this::openStore;
+//            case "openStore" -> command =  this::openStore;
             case "playSound" -> command = () -> playSound(this.command[1]);
             case "loadGame" -> command = () -> loadGame(this.command[1]);
             case "createGame" -> command = () -> {
@@ -77,9 +75,9 @@ public class Command {
         }
     }
 
-    private void openStore() {
+/*    private void openStore() {
         TrailApplication.gameInstance.renderQueue.add(new StoreScene());
-    }
+    }*/
 
     private void playSound(String soundKey) {
         // TODO
@@ -95,7 +93,6 @@ public class Command {
      * @param args All args. Make sure to offset by 1!
      *             (Specific args will be separated in this function)
      * @param paths DataPaths instance
-     * @param renderer TrailRenderer instance
      * @param config Config instance
      * @param players Number of players.
      *                Ensure that the player's data is always first in membersNames
@@ -106,7 +103,6 @@ public class Command {
             String gameName,
             String[] args,
             DataPaths paths,
-            TrailRenderer renderer,
             Config config,
             short players,
             short difficulty
@@ -120,7 +116,6 @@ public class Command {
         TrailApplication.gameInstance = new Game(
                 gameName,
                 paths,
-                renderer,
                 config,
                 membersNames,
                 playerProfessions,

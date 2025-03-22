@@ -8,7 +8,6 @@ import io.github.d_catte.game.PurchasableItem;
 import io.github.d_catte.game.event.Event;
 import io.github.d_catte.scene.Screen;
 import io.github.d_catte.utils.Config;
-import io.github.d_catte.utils.rendering.TrailRenderer;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +24,12 @@ public class Serializer {
     private final Gson gson;
     private final TrailRenderer renderer;
 
-    public Serializer(DataPaths paths, Gson gson, TrailRenderer renderer) {
+    /**
+     * Constructor that sets the local variables to the inputed variables.
+     * @param paths The path of the file
+     * @param gson The GSON file
+     */
+    public Serializer(DataPaths paths, Gson gson) {
         this.paths = paths;
         this.gson = gson;
         this.renderer = renderer;
@@ -99,12 +102,15 @@ public class Serializer {
      * @param event Event to get Screens for
      * @return All Screens for the Event
      */
-    public List<Screen> getScreens(Event event) {
-        try (FileReader reader = new FileReader(Paths.get(event.pathToScreen()).toFile())) {
-            List<ScreenData> screenData = this.gson.fromJson(reader, new TypeToken<List<ScreenData>>(){}.getType());
-            return screenData.stream()
-                    .map(ScreenData::toInfoScreen)
-                    .collect(Collectors.toList());
+    public HashMap<Integer, Screen> getScreens(Path path) {
+        try (FileReader reader = new FileReader(path.toFile())) {
+            List<SerializedScreen> serializedScreenData = this.gson.fromJson(reader, new TypeToken<List<SerializedScreen>>(){}.getType());
+            HashMap<Integer, Screen> hash = new HashMap<>();
+            for (SerializedScreen serializedScreen : serializedScreenData) {
+                Screen screen = serializedScreen.getScreen();
+                hash.put(screen.getId(), screen);
+            }
+            return hash;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -115,7 +121,7 @@ public class Serializer {
      * @return All PurchasableItems
      */
     public List<PurchasableItem> getShopItemsData() {
-        try (FileReader reader = new FileReader(this.paths.shopItemsPath().toFile())) {
+        try (FileReader reader = new FileReader(this.paths.itemsPath().toFile())) {
             return this.gson.fromJson(reader, new TypeToken<List<PurchasableItem>>(){}.getType());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -127,7 +133,7 @@ public class Serializer {
      * @return All towns
      */
     public HashMap<Integer, String> getTownData() {
-        try (FileReader reader = new FileReader(this.paths.townsPath().toFile())) {
+        try (FileReader reader = new FileReader(this.paths.landmarksPath().toFile())) {
             return this.gson.fromJson(reader, new TypeToken<HashMap<Integer, String>>(){}.getType());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -143,7 +149,7 @@ public class Serializer {
         Path savePath = this.paths.savesDirectoryPath().resolve(saveName);
         Game priorGame = getGameData(savePath);
         List<Member> members = getMemberData(savePath);
-        return new Game(renderer, paths, priorGame, getStatuses(), getEventData(), getTownData(), members, Config.getConfig(this.gson, this.paths));
+        return new Game(paths, priorGame, getStatuses(), getEventData(), getTownData(), members, Config.getConfig(this.gson, this.paths));
     }
 
     /**
