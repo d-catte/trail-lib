@@ -18,7 +18,7 @@ public class PurchasableItem extends ItemStack {
     public float purchase(float money, Inventory inventory, short amount) {
         float remainingMoney = money - (price * amount);
         if (remainingMoney >= 0) {
-            ItemStack purchased = soldItem.softCopy();
+            ItemStack purchased = this.softCopy();
             purchased.multiply(amount);
             inventory.addItemStack(purchased);
             return remainingMoney;

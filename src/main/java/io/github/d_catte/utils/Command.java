@@ -44,10 +44,9 @@ public class Command {
                         this.command[1],
                         this.command,
                         (DataPaths) this.passedObjects[0],
-                        (TrailRenderer) this.passedObjects[1],
-                        (Config) this.passedObjects[2],
-                        (short) this.passedObjects[3],
-                        (short) this.passedObjects[4]
+                        (Config) this.passedObjects[1],
+                        (short) this.passedObjects[2],
+                        (short) this.passedObjects[3]
                 );
             };
             default -> {

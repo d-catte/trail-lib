@@ -1,23 +1,14 @@
 package io.github.d_catte.scene;
 
-    /**
-     * Renders the UIComponents
-     * @param renderer TrailRenderer instance
-     */
-    default void renderUIComponents(TrailRenderer renderer) {
-        renderer.clearUI();
-        for (UIComponent component : getUIComponents()) {
-            component.render(renderer);
-        }
+public abstract class Screen {
+    boolean visible;
+    int id;
+
+    public void close() {
+        this.visible = false;
     }
 
-    List<UIComponent> getUIComponents();
-
-    default void onResize(int width, int height, TrailRenderer renderer) {
-        setSize(width, height);
-        renderUIComponents(renderer);
+    public int getId() {
+        return this.id;
     }
-
-    int[] getSize();
-    void setSize(int width, int height);
 }

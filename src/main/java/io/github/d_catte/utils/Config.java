@@ -9,17 +9,12 @@ import java.nio.file.Path;
 
 public class Config {
     private static final String currentConfigVer = "0.1";
-    public boolean webMode;
     public String defaultStatus;
     public String configVer;
     public float startingMoney;
     public int teamMemberCount;
     public int miles;
-    public RenderingBackend renderingBackend;
     public String language;
-
-
-    public Config() {}
 
     public static Config getConfig(Gson gson, DataPaths paths) {
         try (FileReader reader = new FileReader(paths.config().toFile())) {
@@ -34,9 +29,4 @@ public class Config {
     }
 
     public static void migrateConfig(Config configInstance) {}
-
-    public enum RenderingBackend {
-        Swing,
-        ImGUI,
-    }
 }

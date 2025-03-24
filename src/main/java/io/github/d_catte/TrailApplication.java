@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import io.github.d_catte.data.DataPaths;
 import io.github.d_catte.data.Serializer;
 import io.github.d_catte.game.Game;
-import io.github.d_catte.scene.Scene;
-import io.github.d_catte.scene.default_scenes.MainMenu;
 import io.github.d_catte.utils.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +19,8 @@ public class TrailApplication {
     public static final Logger LOGGER = LoggerFactory.getLogger("Trail Lib");
     public static Game gameInstance;
     public static final String VERSION = "v1.0.0-dev.1";
-    public static final String[] SAVES;
-    public static final Serializer SERIALIZER;
+    public static String[] SAVES;
+    public static Serializer SERIALIZER;
 
     public static void main(String[] args) {
     }
@@ -36,7 +34,6 @@ public class TrailApplication {
                 statusData(),
                 gameData(),
                 itemData(),
-                shopItemData(),
                 townData(),
                 eventData(),
                 professionData(),
@@ -46,12 +43,10 @@ public class TrailApplication {
         Config config = Config.getConfig(gson, dataPaths);
         LOGGER.info("Creating Rendering Context");
         LOGGER.info("Serializing Data");
-        SERIALIZER = new Serializer(dataPaths, gson, renderer);
+        SERIALIZER = new Serializer(dataPaths, gson);
         LOGGER.info("Reading Saves");
         SAVES = this.loadSaves();
         LOGGER.info("Forming Main GUI");
-        Scene mainMenu = new MainMenu();
-
     }
 
     public Path sceneData() {

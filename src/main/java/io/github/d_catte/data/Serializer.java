@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class Serializer {
     private final DataPaths paths;
     private final Gson gson;
-    private final TrailRenderer renderer;
 
     /**
      * Constructor that sets the local variables to the inputed variables.
@@ -32,7 +31,6 @@ public class Serializer {
     public Serializer(DataPaths paths, Gson gson) {
         this.paths = paths;
         this.gson = gson;
-        this.renderer = renderer;
     }
 
     /**
@@ -98,8 +96,8 @@ public class Serializer {
     }
 
     /**
-     * Gets all the Screens for the Event
-     * @param event Event to get Screens for
+     * Gets all the Screens from scenes json
+     * @param path The path to scenes json
      * @return All Screens for the Event
      */
     public HashMap<Integer, Screen> getScreens(Path path) {
