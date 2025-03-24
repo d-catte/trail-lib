@@ -19,6 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Serializes JSON files
+ * @author Dylan Catte, Ben Westover, Noah Sumerauer, Micah Lee
+ * @version 1.0
+ */
 public class Serializer {
     private final DataPaths paths;
     private final Gson gson;

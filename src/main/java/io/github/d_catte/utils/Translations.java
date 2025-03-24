@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
+/**
+ * For changing text in the game.
+ * @author Dylan Catte, Ben Westover, Noah Sumerauer, Micah Lee
+ * @version 1.0
+ */
 public class Translations {
     private static Map<String, String> translations;
     private static final String UNKNOWN_TRANSLATION = "This translation is missing";

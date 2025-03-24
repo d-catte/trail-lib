@@ -16,6 +16,11 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Contains the data for the game
+ * @author Dylan Catte, Ben Westover, Noah Sumerauer, Micah Lee
+ * @version 1.0
+ */
 public class Game {
     public final List<StatusContainer> statusContainers;
     public final List<Event> events;
@@ -91,6 +96,11 @@ public class Game {
         this.paths = paths;
     }
 
+    /**
+     * Gets a random profession
+     * @param professions List of what professions the player can choose from
+     * @return Returns a random profession
+     */
     public String getRandomProfession(String[] professions) {
         int i = ThreadLocalRandom.current().nextInt(0, professions.length);
         return professions[i];
@@ -112,6 +122,9 @@ public class Game {
         return null;
     }
 
+    /**
+     * Deletes the game when it is finished
+     */
     public void onGameFinished() {
         // Remove files
         Path gameDir = this.paths.savesDirectoryPath().resolve(this.saveName);
@@ -120,6 +133,9 @@ public class Game {
         }
     }
 
+    /**
+     * Renders the next scene
+     */
     public void nextScene() {
         Scene scene = this.renderQueue.poll();
         if (scene != null) {
@@ -130,6 +146,9 @@ public class Game {
         }
     }
 
+    /**
+     * Shows the next screen
+     */
     public void nextScreen() {
         this.currentScene.showNextScreen();
         if (this.currentScene.finished()) {

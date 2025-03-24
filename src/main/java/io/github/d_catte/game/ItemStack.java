@@ -1,13 +1,27 @@
 package io.github.d_catte.game;
 
+/**
+ * Keeps the number of a certain item in a stack
+ * @author Dylan Catte, Ben Westover, Noah Sumerauer, Micah Lee
+ * @version 1.0
+ */
 public class ItemStack {
     public final String name;
     public short count;
 
+    /**
+     * Constructor that sets the local variables to the inputed variable.
+     * @param name Name of the item stack
+     */
     public ItemStack(String name) {
         this.name = name;
     }
 
+    /**
+     * Constructor that sets the local variables to the inputed variables.
+     * @param name Name of the item stack
+     * @param count Number of item in the item stack
+     */
     public ItemStack(String name, short count) {
         this(name);
         this.count = count;

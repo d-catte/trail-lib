@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Holds the items that the player has
+ * @author Dylan Catte, Ben Westover, Noah Sumerauer, Micah Lee
+ * @version 1.0
+ */
 public class Inventory {
     private final List<ItemStack> items = new ArrayList<>();
 
+    /**
+     * Constructs an inventory
+     */
     public Inventory() {}
 
     /**
@@ -20,6 +28,11 @@ public class Inventory {
         );
     }
 
+    /**
+     * Checks what item the stack contains
+     * @param stack What stack you are checking
+     * @return Returns the name of the stack
+     */
     public Optional<ItemStack> containsItem(ItemStack stack) {
         return containsItem(stack.name);
     }

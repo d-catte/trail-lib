@@ -4,12 +4,24 @@ import io.github.d_catte.TrailApplication;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Contains data for statuses (change of intensity)
+ * @author Dylan Catte, Ben Westover, Noah Sumerauer, Micah Lee
+ * @version 1.0
+ */
 public class StatusContainer {
     public final String name;
     public byte level;
     private final byte maxLevel;
     private final float baseChance;
 
+    /**
+     * Constructor that sets the local variables to the inputed variables.
+     * @param name Name of the Status
+     * @param level Current level of the status
+     * @param maxLevel Max level of the current status
+     * @param baseChance Base chance of the status ocurring without outside factors
+     */
     public StatusContainer(String name, byte level, byte maxLevel, float baseChance) {
         this.name = name;
         this.level = level;
@@ -60,6 +72,11 @@ public class StatusContainer {
         return new StatusContainer(this.name, (byte) 1, this.maxLevel, this.baseChance);
     }
 
+    /**
+     * Return the name of the current status id the object is an instance of StatusContainer
+     * @param obj An object being checked for if its an instance of the StatusContainer
+     * @return Returns name of the Status
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof StatusContainer container) {
